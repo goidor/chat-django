@@ -21,9 +21,3 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^', include('chat.urls', namespace='chat')),
 ]
-
-if settings.DEBUG:
-    import debug_toolbar
-    urlpatterns += [
-        url(r'^debug/', include(debug_toolbar.urls)),
-    ]
