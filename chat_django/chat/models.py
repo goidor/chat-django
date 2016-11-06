@@ -18,7 +18,7 @@ class Message(models.Model):
     time = models.DateTimeField(default=timezone.now, db_index=True)
 
     def __str__(self):
-        return '[{time}]: {message}'.format(**self.as_dict())
+        return '[%s]: %s' % (self.time, self.message)
 
     def room_post_save(sender, instance, created, **kwargs):
         Room.objects.get_or_create(user=instance.user_id)

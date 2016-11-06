@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.views.generic import ListView
 from django.views.generic.detail import DetailView
+from django.db.models import Q
 from django.views.generic.edit import (
     CreateView,
     UpdateView
@@ -21,14 +22,11 @@ class ListUsers(ListView):
 def list_chats(request, user_id):
     if user_id is not None:
         user = User.objects.get(id=user_id)
-        users = User.objects.filter(is_active=True, is_superuser=False)
-        room_id = Room.objects.get_or_create(user=user)
+        users = User.objects.filter(~Q(id=user_id), is_active=True, is_superuser=False)
 
         return render(request, 'chat/room_list.html',
-                     {'list_users': users,
-                      'room_id': room_id[0].id,
-                     'usuario': User.objects.get(id=user_id)},
-                     )
+            {'list_users': users,
+            'usuario': user.id})
     else:
         return render(request, 'chat/room_list.html')
 
@@ -40,7 +38,7 @@ def messages(request, user_id, room_id=None):
         form = MessageSendForm(request.POST)
         if form.is_valid():
             #import pdb; pdb.set_trace()
-            room_chat = Room.objects.get(user=user)
+            room_chat = Room.objects.get(id=room_id)
             message = form.save(commit=False)
             message.message = request.POST['message']
             message.room = room_chat
@@ -48,14 +46,17 @@ def messages(request, user_id, room_id=None):
             message.save()
 
     if room_id:
-        room_chat = Room.objects.get_or_create(user=user)
-        messages = Message.objects.filter(room=room_chat[0])
-        users = User.objects.filter(is_active=True, is_superuser=False).exclude(id=user_id)
+        room_chat, created = Room.objects.get_or_create(user=user_id)
+        #messages = Message.objects.filter(room=room_chat[0], user=)
+        messages = reversed(room_chat.messages.order_by('-time')[:50])
+        users = User.objects.filter(~Q(id=user_id), is_active=True, is_superuser=False)
 
         return render(request, 'chat/chat.html',
-                     {'room_chat': room_chat,
-                      'messages': messages,
-                      'users': users,
-                      'form': form})
+            {'messages': messages,
+            'users': users,
+            'user_chat': user.username,
+            'usuario': user.id,
+            'user_name': '%s %s' % (user.first_name, user.last_name),
+            'form': form})
     else:
         return render(request, 'chat/room_list.html')

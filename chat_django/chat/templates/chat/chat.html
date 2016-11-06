@@ -3,7 +3,7 @@
 {% block content %}
 			<div class="jumbotron well">
 				<h2>
-					Bienvenido!
+                    Bienvenid@ {{ user_name }}.
 				</h2>
 				<p>
 				    Comunicación sencilla y fácil.
@@ -17,7 +17,8 @@
         {% for message in messages %}
           <tr>
             <td>{{ message.message }}</td>
-            <td>{{ message.time|date:'Y-m-d H:i' }}</td>
+            <td>{{ message.user.username }}</td>
+            <td>{{ message.time|date:'d-m-Y H:i' }}</td>
           </tr>
         {% endfor %}
       </tbody>
@@ -32,12 +33,13 @@
             </div>
                 <button type="submit" id="enviar" class="btn btn-success">Enviar</button>
         </td>
+        <td align="center"> <p style="color: #419641; font-size: 20px;"> {{ user_chat }} </p></td>
       </tfoot>
     </table>
   </form>
 				</div>
 				<div class="col-md-6">
-                    <h3 align="center">Conectados</h3>
+                    <h3 align="center">Usuarios</h3>
 					<table class="table table-hover table-bordered">
 						<thead>
 							<tr>
@@ -51,14 +53,22 @@
 									Apellido
 								</th>
 							</tr>
-						</thead>
+                        </thead>
 						<tbody>
                             {% for user in users %}
-                            <tr>
-                                <td>{{ forloop.counter }}</td>
-                                <td>{{ user.first_name }}</td>
-                                <td>{{ user.last_name }}</td>
-                            </tr>
+                                {% for room in user.room_set.all %}
+                                <tr class="success">
+                                    <td>
+                                        <a href="{% url "chat:messages" usuario room.id %}">{{ user.username }}</a>
+                                    </td>
+                                    <td>
+                                        <a href="{% url "chat:messages" usuario room.id %}">{{ user.first_name }}</a>
+                                    </td>
+                                    <td>
+                                        <a href="{% url "chat:messages" usuario room.id %}">{{ user.last_name }}</a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
                             {% endfor %}
 						</tbody>
 					</table>
