@@ -1,0 +1,138 @@
+{% extends "base.html" %}
+
+{% block content %}
+			<div class="jumbotron well">
+				<h2>
+					Bienvenido!
+				</h2>
+				<p>
+				    Comunicación sencilla y fácil.
+				</p>
+			</div>
+			<div class="row">
+				<div class="col-md-6">
+					<table class="table table-hover table-bordered">
+						<thead>
+							<tr>
+								<th>
+                                    Username
+								</th>
+								<th>
+                                    Nombre
+								</th>
+								<th>
+                                    Apellido
+								</th>
+							</tr>
+						</thead>
+						<tbody>
+                            {% for user in list_users %}
+							<tr class="success">
+                                <td>
+                                    <a href="{% url "chat:messages" user.id room_id %}">{{ user.username }}</a>
+                                </td>
+                                <td>
+                                    <a href="{% url "chat:messages" user.id room_id %}">{{ user.first_name }}</a>
+                                </td>
+                                <td>
+                                    <a href="{% url "chat:messages" user.id room_id %}">{{ user.last_name }}</a>
+                                </td>
+							</tr>
+                            {% endfor %}
+						</tbody>
+					</table>
+				</div>
+				<div class="col-md-6">
+					<table class="table table-hover table-bordered">
+						<thead>
+							<tr>
+								<th>
+									#
+								</th>
+								<th>
+									Product
+								</th>
+								<th>
+									Payment Taken
+								</th>
+								<th>
+									Status
+								</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>
+									1
+								</td>
+								<td>
+									TB - Monthly
+								</td>
+								<td>
+									01/04/2012
+								</td>
+								<td>
+									Default
+								</td>
+							</tr>
+							<tr class="active">
+								<td>
+									1
+								</td>
+								<td>
+									TB - Monthly
+								</td>
+								<td>
+									01/04/2012
+								</td>
+								<td>
+									Approved
+								</td>
+							</tr>
+							<tr class="success">
+								<td>
+									2
+								</td>
+								<td>
+									TB - Monthly
+								</td>
+								<td>
+									02/04/2012
+								</td>
+								<td>
+									Declined
+								</td>
+							</tr>
+							<tr class="warning">
+								<td>
+									3
+								</td>
+								<td>
+									TB - Monthly
+								</td>
+								<td>
+									03/04/2012
+								</td>
+								<td>
+									Pending
+								</td>
+							</tr>
+							<tr class="danger">
+								<td>
+									4
+								</td>
+								<td>
+									TB - Monthly
+								</td>
+								<td>
+									04/04/2012
+								</td>
+								<td>
+									Call in to confirm
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+{% endblock content %}
